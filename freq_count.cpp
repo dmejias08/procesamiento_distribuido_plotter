@@ -77,6 +77,7 @@ int main(int argc, char** argv) {
 
     // Extract the text fraction for this node
     string text_fraction = text.substr(start, fraction_length);
+    printf(text_fraction);
 
     // Count letter frequency in the text fraction
     map<char, int> local_frequency = count_letter_frequency(text_fraction);
