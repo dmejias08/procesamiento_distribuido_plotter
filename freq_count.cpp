@@ -63,27 +63,35 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    // Read the entire text into a string
-    string text((istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>());
+    if (rank == 0){
+        // Read the entire text into a string
+        string text((istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>());
 
-    int text_length = text.length();
-    int fraction_size = text_length / size;
-    int extra_characters = text_length % size;
-    printf("fraction_size: %d, extra_characters: %d \n",fraction_size, extra_characters);
+        int text_length = text.length();
+        int fraction_size = text_length / size;
+        int extra_characters = text_length % size;
+        printf("fraction_size: %d, extra_characters: %d \n",fraction_size, extra_characters);
 
-    // Calculate the size of text fraction for each node
-    int start = rank * fraction_size;
-    int fraction_length = fraction_size + (rank == size - 1 ? extra_characters : 0);
+        // Calculate the size of text fraction for each node
+        int start = rank * fraction_size;
+        int fraction_length = fraction_size + (rank == size - 1 ? extra_characters : 0);
 
-    // Extract the text fraction for this node
-    string text_fraction = text.substr(start, fraction_length);
-    printf(text_fraction);
+        // Extract the text fraction for this node
+        string text_fraction = text.substr(start, fraction_length);
+        printf(text_fraction);
+        MPI_Send(text_fraction, 256, MPI_INT, 0, 0, MPI_COMM_WORLD);
+    }
 
-    // Count letter frequency in the text fraction
-    map<char, int> local_frequency = count_letter_frequency(text_fraction);
+
+
 
     // Send local frequency data to the root node
     if (rank != 0) {
+        MPI_Recv(receive_local_frequency.data(), 256, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        
+        // Count letter frequency in the text fraction
+        map<char, int> local_frequency = count_letter_frequency(receive_local_frequency);
+        
         vector<int> frequency_data(256); // Initialize a vector to hold frequency data
         for (const auto& pair : local_frequency) {
             frequency_data[pair.first] = pair.second;
