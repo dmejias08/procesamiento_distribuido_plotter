@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
         // Print the global frequency of each letter, treating uppercase and lowercase as equal
         for (char c = 'a'; c <= 'z'; ++c) {
             cout << "'" << c << "': " << global_frequency_data[c] + global_frequency_data[toupper(c)] << endl;
-            result.push(global_frequency_data[c] + global_frequency_data[toupper(c)]);
+            result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
         }
         for (int j = 0; j < 256; ++j) {
             printf("valor %d: %d", j, result[j]);        
