@@ -3,4 +3,4 @@ connect:
 build:
 	mpic++ -o /home/nodo/operativos/freq_count freq_check.cpp
 run:
-	mpirun --host abner,isaac,geo -np 3 --oversubscribe /home/nodo/operativos/freq_count /home/nodo/operativos/Quijote.txt 
+	mpirun --host abner,isaac,geo -np 3 --oversubscribe /home/nodo/operativos/freq_count quijote.txt 

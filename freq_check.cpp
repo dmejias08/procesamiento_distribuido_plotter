@@ -60,8 +60,10 @@ int main(int argc, char** argv) {
         int fraction_size = text_length / size;
         int extra_characters = text_length % size;
 
-        // Broadcast fraction size to all processes
-        MPI_Bcast(&fraction_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        /// Send fraction size to all processes
+        for (int i = 1; i < size; ++i) {
+            MPI_Send(&fraction_size, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+        }
 
         // Send text fractions to other processes
         for (int i = 1; i < size; ++i) {
@@ -73,7 +75,8 @@ int main(int argc, char** argv) {
     } else {
         int fraction_length;
         // Receive fraction size from root process
-        MPI_Bcast(&fraction_length, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        MPI_Recv(&fraction_length, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("fraction_length %d", fraction_length);
 
         // Receive text fraction from root process
         string text_fraction(fraction_length, '\0');
