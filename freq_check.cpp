@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
     }
 
     if (rank == 0) {
-        printf("fraction_length %d\n");
+        printf("Estoy en master, este es mi size %d", size);
         string text((istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>());
         int text_length = text.length();
         int fraction_size = text_length / size;
@@ -71,14 +71,14 @@ int main(int argc, char** argv) {
             int start = i * fraction_size;
             int fraction_length = fraction_size + (i == size - 1 ? extra_characters : 0);
             string text_fraction = text.substr(start, fraction_length);
-            printf("fraction_length %d\n", fraction_length);
+            printf("fraction_length desde master %d\n", fraction_length);
             MPI_Send(text_fraction.c_str(), fraction_length, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
     } else {
         int fraction_length;
         // Receive fraction size from root process
         MPI_Recv(&fraction_length, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        printf("fraction_length %d\n", fraction_length);
+        printf("fraction_length desde nodo %d\n", fraction_length);
 
         // Dynamically allocate memory for text_fraction
         char* text_fraction_buffer = new char[fraction_length + 1]; // +1 for null terminator
