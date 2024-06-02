@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
         int fraction_length;
         // Receive fraction size from root process
         MPI_Recv(&fraction_length, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        printf("fraction_length desde nodo %d\n", fraction_length);
+        printf("fraction_length desde nodo %d: %d\n", rank, fraction_length);
 
         // Dynamically allocate memory for text_fraction
         char* text_fraction_buffer = new char[fraction_length + 1]; // +1 for null terminator
