@@ -34,6 +34,6 @@ int main(void)
   }
   cout << "Encrypted" << endl;
 
-  //system("make");
+  system("make run");
   return 0;
 }
