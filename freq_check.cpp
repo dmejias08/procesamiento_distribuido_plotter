@@ -45,16 +45,17 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    string input_text_file = argv[1];
-
-    ifstream input_file(input_text_file);
-    if (!input_file) {
-        cerr << "Error: Unable to open input file." << endl;
-        MPI_Finalize();
-        return -1;
-    }
+    
 
     if (rank == 0) {
+        string input_text_file = argv[1];
+
+        ifstream input_file(input_text_file);
+        if (!input_file) {
+            cerr << "Error: Unable to open input file." << endl;
+            MPI_Finalize();
+            return -1;
+        }
         printf("Estoy en master, este es mi size %d\n", size);
         string text((istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>());
         int text_length = text.length();
