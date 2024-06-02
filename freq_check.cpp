@@ -51,11 +51,13 @@ int main(int argc, char** argv) {
         string input_text_file = argv[1];
 
         ifstream input_file(input_text_file);
+
         if (!input_file) {
             cerr << "Error: Unable to open input file." << endl;
             MPI_Finalize();
             return -1;
         }
+
         printf("Estoy en master, este es mi size %d\n", size);
         string text((istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>());
         int text_length = text.length();
@@ -64,6 +66,7 @@ int main(int argc, char** argv) {
 
         /// Send fraction size to all processes
         for (int i = 0; i < size; ++i) {
+            printf("fraction_length desde master %d\n", fraction_size);
             MPI_Send(&fraction_size, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
         }
 
