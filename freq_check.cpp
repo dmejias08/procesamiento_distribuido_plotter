@@ -61,45 +61,47 @@ int main(int argc, char** argv) {
         printf("Estoy en master, este es mi size %d\n", size);
         string text((istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>());
         int text_length = text.length();
-        int fraction_size = text_length / size;
-        int extra_characters = text_length % size;
+        printf("Text size %d", text_length);
+        int fraction_size = text_length / (size-1);
+        int extra_characters = text_length - fraction_size * (size-1);
 
         /// Send fraction size to all processes
-        for (int i = 0; i < size; i++) {
-            int start = i * fraction_size;
+        for (int i = 1; i < size; i++) {
+            int start = (i-1) * fraction_size;
             int fraction_length = fraction_size + (i == size - 1 ? extra_characters : 0);
             string text_fraction = text.substr(start, fraction_length);
 
-            printf("fraction_size desde master %d\n", fraction_length);
-            MPI_Send(&fraction_length, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
             printf("fraction_length desde master %d\n", fraction_length);
+            MPI_Send(&fraction_length, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
             MPI_Send(text_fraction.c_str(), fraction_length, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
     } 
-    int fraction_length;
-    // Receive fraction size from root process
-    MPI_Recv(&fraction_length, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    printf("fraction_length desde nodo %d: %d\n", rank, fraction_length);
+    else {
+        int fraction_length;
+        // Receive fraction size from root process
+        MPI_Recv(&fraction_length, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("fraction_length desde nodo %d: %d\n", rank, fraction_length);
 
-    // Dynamically allocate memory for text_fraction
-    char* text_fraction_buffer = new char[fraction_length + 1]; // +1 for null terminator
-    MPI_Recv(text_fraction_buffer, fraction_length, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    text_fraction_buffer[fraction_length] = '\0'; // Add null terminator
+        // Dynamically allocate memory for text_fraction
+        char* text_fraction_buffer = new char[fraction_length + 1]; // +1 for null terminator
+        MPI_Recv(text_fraction_buffer, fraction_length, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        text_fraction_buffer[fraction_length] = '\0'; // Add null terminator
 
-    // Assign received data to string
-    string text_fraction(text_fraction_buffer);
-    delete[] text_fraction_buffer; // Deallocate buffer
+        // Assign received data to string
+        string text_fraction(text_fraction_buffer);
+        delete[] text_fraction_buffer; // Deallocate buffer
 
-    // Count letter frequency in the text fraction
-    printf("chars to count\n");
-    map<char, int> local_frequency = count_letter_frequency(text_fraction);
+        // Count letter frequency in the text fraction
+        printf("chars to count\n");
+        map<char, int> local_frequency = count_letter_frequency(text_fraction);
 
-    // Send local frequency data to the root node after encryption
-    vector<int> frequency_data(256); // Initialize a vector to hold frequency data
-    for (const auto& pair : local_frequency) {
-        frequency_data[pair.first] = pair.second;
+        // Send local frequency data to the root node after encryption
+        vector<int> frequency_data(256); // Initialize a vector to hold frequency data
+        for (const auto& pair : local_frequency) {
+            frequency_data[pair.first] = pair.second;
+        }
+        MPI_Send(frequency_data.data(), 256, MPI_INT, 0, 0, MPI_COMM_WORLD);
     }
-    MPI_Send(frequency_data.data(), 256, MPI_INT, 0, 0, MPI_COMM_WORLD);
     
 
     // Root node gathers frequency data from all nodes
@@ -107,18 +109,11 @@ int main(int argc, char** argv) {
         // Root node gathers frequency data from all nodes
         vector<int> global_frequency_data(256, 0); // Initialize vector to hold global frequency data
         for (int i = 0; i < size; ++i) {
-            if (i == 0) {
-                for (const auto& pair : local_frequency) {
-                    global_frequency_data[pair.first] = pair.second;
-                }
-            } else {
-                vector<int> received_frequency_data(256); // Vector to receive frequency data
-                MPI_Recv(received_frequency_data.data(), 256, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-                // Combine received frequency data with global frequency data
-                for (int j = 0; j < 256; ++j) {
-                    global_frequency_data[j] += received_frequency_data[j];
-                }
-                
+            vector<int> received_frequency_data(256); // Vector to receive frequency data
+            MPI_Recv(received_frequency_data.data(), 256, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            // Combine received frequency data with global frequency data
+            for (int j = 0; j < 256; ++j) {
+                global_frequency_data[j] += received_frequency_data[j];
             }
         }
 
