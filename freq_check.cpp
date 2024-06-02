@@ -55,29 +55,39 @@ int main(int argc, char** argv) {
     }
 
     if (rank == 0) {
+        printf("Estoy en master, este es mi size %d\n", size);
         string text((istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>());
         int text_length = text.length();
         int fraction_size = text_length / size;
         int extra_characters = text_length % size;
 
-        // Broadcast fraction size to all processes
-        MPI_Bcast(&fraction_size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        /// Send fraction size to all processes
+        for (int i = 0; i < size; ++i) {
+            MPI_Send(&fraction_size, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+        }
 
         // Send text fractions to other processes
-        for (int i = 1; i < size; ++i) {
+        for (int i = 0; i < size; ++i) {
             int start = i * fraction_size;
             int fraction_length = fraction_size + (i == size - 1 ? extra_characters : 0);
             string text_fraction = text.substr(start, fraction_length);
+            printf("fraction_length desde master %d\n", fraction_length);
             MPI_Send(text_fraction.c_str(), fraction_length, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
     } else {
         int fraction_length;
         // Receive fraction size from root process
-        MPI_Bcast(&fraction_length, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        MPI_Recv(&fraction_length, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("fraction_length desde nodo %d\n", fraction_length);
 
-        // Receive text fraction from root process
-        string text_fraction(fraction_length, '\0');
-        MPI_Recv(&text_fraction[0], fraction_length, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        // Dynamically allocate memory for text_fraction
+        char* text_fraction_buffer = new char[fraction_length + 1]; // +1 for null terminator
+        MPI_Recv(text_fraction_buffer, fraction_length, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        text_fraction_buffer[fraction_length] = '\0'; // Add null terminator
+
+        // Assign received data to string
+        string text_fraction(text_fraction_buffer);
+        delete[] text_fraction_buffer; // Deallocate buffer
 
         // Count letter frequency in the text fraction
         map<char, int> local_frequency = count_letter_frequency(text_fraction);
@@ -93,7 +103,7 @@ int main(int argc, char** argv) {
     // Root node gathers frequency data from all nodes
     if (rank == 0) {
         vector<int> global_frequency_data(256, 0); // Initialize vector to hold global frequency data
-        for (int i = 1; i < size; ++i) {
+        for (int i = 0; i < size; ++i) {
             vector<int> received_frequency_data(256); // Vector to receive frequency data
             MPI_Recv(received_frequency_data.data(), 256, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
