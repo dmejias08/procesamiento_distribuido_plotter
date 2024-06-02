@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
         int extra_characters = text_length % size;
 
         /// Send fraction size to all processes
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i <= size; i++) {
             int start = i * fraction_size;
             int fraction_length = fraction_size + (i == size - 1 ? extra_characters : 0);
             string text_fraction = text.substr(start, fraction_length);
@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
     // Root node gathers frequency data from all nodes
     if (rank == 0) {
         vector<int> global_frequency_data(256, 0); // Initialize vector to hold global frequency data
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i <= size; i++) {
             vector<int> received_frequency_data(256); // Vector to receive frequency data
             MPI_Recv(received_frequency_data.data(), 256, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
