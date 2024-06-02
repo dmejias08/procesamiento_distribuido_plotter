@@ -28,7 +28,6 @@ int main(void)
   encrypted_file.open(encrypted_file_path, std::ios_base::out);
   encrypted_file.close();
   encrypted_file.open(encrypted_file_path, std::ios_base::app);
-  cout << "File with %d characters" << 
   cout << "Encrypting..." << endl;
   for (int i = 0;i<text_lenght;i++){
     encrypted_file << char(toascii(text[i])+122);
