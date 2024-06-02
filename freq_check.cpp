@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 
         /// Send fraction size to all processes
         for (int i = 0; i < size; ++i) {
-            printf("fraction_length desde master %d\n", fraction_size);
+            printf("fraction_size desde master %d\n", fraction_size);
             MPI_Send(&fraction_size, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
         }
 
@@ -78,7 +78,9 @@ int main(int argc, char** argv) {
             printf("fraction_length desde master %d\n", fraction_length);
             MPI_Send(text_fraction.c_str(), fraction_length, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
-    } else {
+
+    } 
+    if(rank != 0) {
         int fraction_length;
         // Receive fraction size from root process
         MPI_Recv(&fraction_length, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
