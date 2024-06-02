@@ -1,0 +1,4 @@
+make -C /usr/src/linux-headers-$(uname -r) M=$(pwd modules)
+# dmesg | tail
+sudo mknod /dev/memory c 60 0
+udevadm monitor
