@@ -70,6 +70,7 @@ int main(int argc, char** argv) {
             int start = i * fraction_size;
             int fraction_length = fraction_size + (i == size - 1 ? extra_characters : 0);
             string text_fraction = text.substr(start, fraction_length);
+            printf("fraction_length %d\n", fraction_length);
             MPI_Send(text_fraction.c_str(), fraction_length, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
     } else {
