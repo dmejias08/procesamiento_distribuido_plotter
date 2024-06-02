@@ -24,6 +24,7 @@ map<char, int> count_letter_frequency(const string& text_fraction) {
     for (char c : text_fraction) {
         if (isalpha(c)) {
             c = tolower(remove_accent(c));
+	    printf("El caracter es: %c\n", c);
             frequency_map[c]++;
         }
     }
@@ -61,7 +62,7 @@ int main(int argc, char** argv) {
         printf("Estoy en master, este es mi size %d\n", size);
         string text((istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>());
         int text_length = text.length();
-        printf("Text size %d", text_length);
+        printf("Text size %d\n", text_length);
         int fraction_size = text_length / (size-1);
         int extra_characters = text_length - fraction_size * (size-1);
 
@@ -106,9 +107,10 @@ int main(int argc, char** argv) {
 
     // Root node gathers frequency data from all nodes
     if (rank == 0) {
+       printf("Hola desde master estoy recibiendo los datos\n");
         // Root node gathers frequency data from all nodes
         vector<int> global_frequency_data(256, 0); // Initialize vector to hold global frequency data
-        for (int i = 0; i < size; ++i) {
+        for (int i = 1; i < size; i++) {
             vector<int> received_frequency_data(256); // Vector to receive frequency data
             MPI_Recv(received_frequency_data.data(), 256, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             // Combine received frequency data with global frequency data
