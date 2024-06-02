@@ -22,7 +22,7 @@ map<char, int> count_letter_frequency(const string& text_fraction) {
     map<char, int> frequency_map;
 
     for (char c : text_fraction) {
-        c = char(toascii(c)-122);
+        c = char(c-122);
         if (isalpha(c)) {
             c = tolower(remove_accent(c));
             printf("El caracter es: %c\n", c);
