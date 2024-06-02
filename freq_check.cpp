@@ -90,6 +90,7 @@ int main(int argc, char** argv) {
         delete[] text_fraction_buffer; // Deallocate buffer
 
         // Count letter frequency in the text fraction
+        printf("chars to count\n");
         map<char, int> local_frequency = count_letter_frequency(text_fraction);
 
         // Send local frequency data to the root node after encryption
