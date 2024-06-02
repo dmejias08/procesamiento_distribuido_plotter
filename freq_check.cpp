@@ -66,19 +66,15 @@ int main(int argc, char** argv) {
 
         /// Send fraction size to all processes
         for (int i = 1; i < size; ++i) {
-            printf("fraction_size desde master %d\n", fraction_size);
-            MPI_Send(&fraction_size, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
-        }
-
-        // Send text fractions to other processes
-        for (int i = 1; i < size; ++i) {
             int start = i * fraction_size;
             int fraction_length = fraction_size + (i == size - 1 ? extra_characters : 0);
             string text_fraction = text.substr(start, fraction_length);
+            
+            printf("fraction_size desde master %d\n", fraction_size);
+            MPI_Send(&fraction_size, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
             printf("fraction_length desde master %d\n", fraction_length);
             MPI_Send(text_fraction.c_str(), fraction_length, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
-
     } 
     if(rank != 0) {
         int fraction_length;
