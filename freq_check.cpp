@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
     }
 
     if (rank == 0) {
+        printf("fraction_length %d\n");
         string text((istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>());
         int text_length = text.length();
         int fraction_size = text_length / size;
