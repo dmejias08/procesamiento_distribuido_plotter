@@ -44,11 +44,12 @@ vector<vector<float>> getMax(vector<int> histograma){
     {
         maxvalue=0;   
         for (size_t i = 0; i < normalizado.size(); i++){
-            if (normalizado[i]>normalizado[maxvalue]& std::find(maxValues.begin(), maxValues.end(), maxvalue) != maxValues.end())
+            
+
+            if (normalizado[i]>normalizado[maxvalue]& std::find(maxValues.begin(), maxValues.end(), i) == maxValues.end())
             {
              maxvalue=i;
-             cout<<i<<endl;
-             cout<<normalizado[i]<<endl;
+             
             }
         }
         maxValues.push_back(maxvalue);
@@ -144,7 +145,7 @@ void closePort(){
 }
 
 
-int main(){
+int ejemplo(){
 //Setear valores
 vector<int> lista=vector<int>(7);
 lista[0]=0;
@@ -168,6 +169,6 @@ cout<<vectorToString(valores[0])<<endl;
 //Crear el string
 auto parsedString =vectorToString(frecuenciasMaximos);
 //Mandar al ARDUINO
-//sendToArduino(parsedString);//No tengo el arduino correcto
+sendToArduino(parsedString);//No tengo el arduino correcto
 cout<<parsedString<<endl;
 }
