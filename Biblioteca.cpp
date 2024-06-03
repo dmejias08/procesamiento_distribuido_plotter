@@ -145,10 +145,10 @@ void closePort(){
 }
 
 
-int Plot(vector<int> in){
+vector<vector<float>> Plot(vector<int> in){
 //obtener lista de posicion de maximos y la frecuencia normalizada
-//Valores[0] => lista de posiciones
-//Valores[1] => histograma normalizado
+//Valores[0] =>  histograma normalizado
+//Valores[1] =>  lista de posiciones
 auto valores=getMax(in);
 //Obtener los 5 a plotear
 vector<float> frecuenciasMaximos=vector<float>(5);
@@ -159,6 +159,7 @@ for (size_t i = 0; i < frecuenciasMlaximos.size(); i++){
 auto parsedString =vectorToString(frecuenciasMaximos);
 //Mandar al ARDUINO
 sendToArduino(parsedString);//No tengo el arduino correcto
+return {valores[1],frecuenciasMaximos};
 }
 
 int ejemplo(){
@@ -177,7 +178,7 @@ lista[6]=7;
 auto valores=getMax(lista);
 //Obtener los 5 a plotear
 vector<float> frecuenciasMaximos=vector<float>(5);
-for (size_t i = 0; i < frecuenciasMaximos.size(); i++){
+for (size_t i = 0; i < frecuenciasMlaximos.size(); i++){
 	frecuenciasMaximos[i]=valores[0][valores[1][(int)i]];
 }
 cout<<vectorToString(valores[1])<<endl;
