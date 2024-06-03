@@ -152,7 +152,7 @@ vector<vector<float>> Plot(vector<int> in){
 auto valores=getMax(in);
 //Obtener los 5 a plotear
 vector<float> frecuenciasMaximos=vector<float>(5);
-for (size_t i = 0; i < frecuenciasMlaximos.size(); i++){
+for (size_t i = 0; i < frecuenciasMaximos.size(); i++){
 	frecuenciasMaximos[i]=valores[0][valores[1][(int)i]];
 }
 //Crear el string
@@ -178,7 +178,7 @@ lista[6]=7;
 auto valores=getMax(lista);
 //Obtener los 5 a plotear
 vector<float> frecuenciasMaximos=vector<float>(5);
-for (size_t i = 0; i < frecuenciasMlaximos.size(); i++){
+for (size_t i = 0; i < frecuenciasMaximos.size(); i++){
 	frecuenciasMaximos[i]=valores[0][valores[1][(int)i]];
 }
 cout<<vectorToString(valores[1])<<endl;
