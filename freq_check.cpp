@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <mpi.h>
+#include "biblioteca.h"
 
 using namespace std;
 
@@ -119,6 +120,7 @@ int main(int argc, char** argv) {
                 global_frequency_data[j] += received_frequency_data[j];
             }
         }
+
         vector<int> result;
         // Print the global frequency of each letter, treating uppercase and lowercase as equal
         for (char c = 'a'; c <= 'z'; ++c) {
@@ -128,6 +130,17 @@ int main(int argc, char** argv) {
         for (int j = 0; j < result.size(); ++j) {
             printf("valor %d: %d\n", j, result[j]);        
         }
+
+        auto valores=getMax(result);
+        //Obtener los 5 a plotear
+        vector<float> frecuenciasMaximos=vector<float>(5);
+        for (size_t i = 0; i < frecuenciasMaximos.size(); i++){
+            frecuenciasMaximos[i]=valores[0][valores[1][(int)i]];
+        }
+        //Crear el string
+        auto parsedString =vectorToString(frecuenciasMaximos);
+        //Mandar al ARDUINO
+        sendToArduino(parsedString);
     }
 
     MPI_Finalize();

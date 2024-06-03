@@ -1,3 +1,4 @@
+#include "biblioteca.h"
 #include <iostream>
 #include <fcntl.h>
 #include <unistd.h>
@@ -8,7 +9,6 @@
 #include <sstream>
 #include <algorithm>
 
-using namespace std;
 template <typename T> std::string vectorToString(std::vector<T> vec) {
     std::stringstream ss;
     for (size_t i = 0; i < vec.size(); ++i) {
