@@ -119,14 +119,14 @@ int main(int argc, char** argv) {
                 global_frequency_data[j] += received_frequency_data[j];
             }
         }
-        vector<int> result(256, 0);
+        vector<int> result;
         // Print the global frequency of each letter, treating uppercase and lowercase as equal
         for (char c = 'a'; c <= 'z'; ++c) {
             cout << "'" << c << "': " << global_frequency_data[c] + global_frequency_data[toupper(c)] << endl;
             result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
         }
-        for (int j = 0; j < 256; ++j) {
-            printf("valor %d: %d", j, result[j]);        
+        for (int j = 0; j < result.size(); ++j) {
+            printf("valor %d: %d\n", j, result[j]);        
         }
     }
 
