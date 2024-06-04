@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
-#include "biblioteca.h"
+#include "Biblioteca.h"
 
 using namespace std;
 
