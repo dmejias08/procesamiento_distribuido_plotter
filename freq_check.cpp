@@ -134,6 +134,7 @@ int main(int argc, char** argv) {
 
     MPI_Finalize();
     string command = "./plotter " + result;
+    cout<<command<<endl;
     system(command.c_str());
     return 0;
 }

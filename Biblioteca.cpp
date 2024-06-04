@@ -119,8 +119,8 @@ int sendToArduino(std::string message) {
 
     vector<char> recieved(255);
 
-    std::cout << "Enter a character to send to the Arduino: ";
-    std::cin >> message;
+    //std::cout << "Enter a character to send to the Arduino: ";
+    //std::cin >> message;
 
     // Write the message to the serial port
     int write_result = write(serial_port, message.c_str(), message.size());

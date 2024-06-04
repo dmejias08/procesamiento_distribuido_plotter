@@ -1,6 +1,8 @@
 connect:
 	sudo mount 192.168.70.202:/home/nodo/operativos /home/nodo/operativos
 build:
+	g++ -c Biblioteca.cpp
+	ar rvs Biblioteca.a Biblioteca.o
 	mpic++ freq_check.cpp -o /home/nodo/operativos/freq_check
 	g++ freq_plotter.cpp Biblioteca.a -o plotter
 run:
