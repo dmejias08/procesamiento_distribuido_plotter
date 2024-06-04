@@ -35,6 +35,7 @@ map<char, int> count_letter_frequency(const string& text_fraction) {
 }
 
 int main(int argc, char** argv) {
+    string result;
     MPI_Init(&argc, &argv);
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -121,7 +122,7 @@ int main(int argc, char** argv) {
             }
         }
 
-        string result;
+        
         // Print the global frequency of each letter, treating uppercase and lowercase as equal
         for (char c = 'a'; c <= 'z'; ++c) {
             cout << "'" << c << "': " << global_frequency_data[c] + global_frequency_data[toupper(c)] << endl;
@@ -129,9 +130,10 @@ int main(int argc, char** argv) {
             result.append(",");
             //result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
         }
-        printf(result);
     }
 
     MPI_Finalize();
+    string command = "./plotter " + resultString;
+    system(command.c_str());
     return 0;
 }
