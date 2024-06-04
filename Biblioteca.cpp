@@ -38,19 +38,22 @@ vector<vector<float>> getMax(vector<int> histograma){
         }
         
     }
-
+    float nextMaxValue=0;
     maxValues.push_back(maxvalue);
     for (size_t i = 0; i < 4; i++)
     {
-        maxvalue=0;   
+        maxvalue=nextMaxValue;
+        nextMaxValue=0
         for (size_t i = 0; i < normalizado.size(); i++){
             
 
-            if (normalizado[i]>normalizado[maxvalue]& std::find(maxValues.begin(), maxValues.end(), i) == maxValues.end())
+            if (normalizado[i]>normalizado[maxvalue])
             {
-             maxvalue=i;
-             
-            }
+		    if(std::find(maxValues.begin(), maxValues.end(), i) == maxValues.end()){
+	             maxvalue=i;}
+            }else{
+	     nextMaxValue=i; 
+	    }
         }
         maxValues.push_back(maxvalue);
     }
