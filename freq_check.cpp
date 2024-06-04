@@ -4,6 +4,7 @@
 #include <map>
 #include <mpi.h>
 #include <string.h>
+#include "Biblioteca.h"
 
 using namespace std;
 
@@ -35,7 +36,7 @@ map<char, int> count_letter_frequency(const string& text_fraction) {
 }
 
 int main(int argc, char** argv) {
-    string result;
+    
     MPI_Init(&argc, &argv);
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -121,19 +122,19 @@ int main(int argc, char** argv) {
                 global_frequency_data[j] += received_frequency_data[j];
             }
         }
-
+        vector<int> result = vector<int>();
         
         // Print the global frequency of each letter, treating uppercase and lowercase as equal
         for (char c = 'a'; c <= 'z'; ++c) {
             cout << "'" << c << "': " << global_frequency_data[c] + global_frequency_data[toupper(c)] << endl;
-            result.append(to_string(global_frequency_data[c] + global_frequency_data[toupper(c)]));
-            result.append(",");
-            //result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
+        
+            result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
         }
-	string command = "/home/nodo/operativos/plotter " + result;
-    	cout<<command<<endl;
-    	system(command.c_str());
+        int serial_port=-1;
+        
+	    Plot(result, &serial_port);
     }
+    
 
     MPI_Finalize();
     return 0;

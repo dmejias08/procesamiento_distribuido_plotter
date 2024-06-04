@@ -61,21 +61,21 @@ vector<vector<float>> getMax(vector<int> histograma){
 }
 
 
-static int serial_port=-1;
+//static int serial_port=-1;
 
 
-int drawManual() {
+int drawManual(int *serial_port) {
     // Change the port name to match your system
     const char* port_name = "/dev/ttyARDUINO0";
 
     // Open the serial port
-    if (serial_port<0)
+    if (*serial_port<0)
     {
-        serial_port = open(port_name, O_RDWR);
+        *serial_port = open(port_name, O_RDWR);
     }
     
 
-    if (serial_port < 0) {
+    if (*serial_port < 0) {
         std::cerr << "Error opening serial port: " << strerror(errno) << std::endl;
         return 1;
     }
@@ -87,14 +87,14 @@ int drawManual() {
     std::cin >> message;
 
     // Write the message to the serial port
-    int write_result = write(serial_port, message.c_str(), message.size());
+    int write_result = write(*serial_port, message.c_str(), message.size());
     if (write_result < 0) {
         std::cerr << "Error writing to serial port: " << strerror(errno) << std::endl;
     } else {
         std::cout << "Sent: " << message << std::endl;
     }
     
-    int read_result = read(serial_port,recieved.data(),255);
+    int read_result = read(*serial_port,recieved.data(),255);
     if (read_result < 0) {
         std::cerr << "Error Reading to serial port: " << strerror(errno) << std::endl;
     } else {
@@ -104,18 +104,18 @@ int drawManual() {
 }
 
 
-int sendToArduino(std::string message) {
+int sendToArduino(std::string message, int *serial_port) {
     // Change the port name to match your system
     const char* port_name = "/dev/ttyARDUINO0";
 
     // Open the serial port
-    if (serial_port<0)
+    if (*serial_port<0)
     {
-        serial_port = open(port_name, O_RDWR);
+        *serial_port = open(port_name, O_RDWR);
     }
     
 
-    if (serial_port < 0) {
+    if (*serial_port < 0) {
         std::cerr << "Error opening serial port: " << strerror(errno) << std::endl;
         return 1;
     }
@@ -126,14 +126,14 @@ int sendToArduino(std::string message) {
     //std::cin >> message;
 
     // Write the message to the serial port
-    int write_result = write(serial_port, message.c_str(), message.size());
+    int write_result = write(*serial_port, message.c_str(), message.size());
     if (write_result < 0) {
         std::cerr << "Error writing to serial port: " << strerror(errno) << std::endl;
     } else {
         std::cout << "Sent: " << message << std::endl;
     }
     
-    int read_result = read(serial_port,recieved.data(),255);
+    int read_result = read(*serial_port,recieved.data(),255);
     if (read_result < 0) {
         std::cerr << "Error Reading to serial port: " << strerror(errno) << std::endl;
     } else {
@@ -142,27 +142,27 @@ int sendToArduino(std::string message) {
 
     return 0;
 }
-void closePort(){
-    close(serial_port);
+void closePort(int *serial_port){
+    close(*serial_port);
 }
 
 
-void Plot(vector<int> in){
-//obtener lista de posicion de maximos y la frecuencia normalizada
-//Valores[0] =>  histograma normalizado
-//Valores[1] =>  lista de posiciones
-auto valores=getMax(in);
-//Obtener los 5 a plotear
-vector<float> frecuenciasMaximos=vector<float>(5);
-for (size_t i = 0; i < frecuenciasMaximos.size(); i++){
-	frecuenciasMaximos[i]=valores[0][valores[1][(int)i]];
-}
-//Crear el string
-auto parsedString =vectorToString(frecuenciasMaximos);
-//Mandar al ARDUINO
-sendToArduino(parsedString);
-cout<<parsedString<<endl;
-//return {valores[1],frecuenciasMaximos};
+vector<vector<float>> Plot(vector<int> in, int *serial_port){
+    //obtener lista de posicion de maximos y la frecuencia normalizada
+    //Valores[0] =>  histograma normalizado
+    //Valores[1] =>  lista de posiciones
+    auto valores=getMax(in);
+    //Obtener los 5 a plotear
+    vector<float> frecuenciasMaximos=vector<float>(5);
+    for (size_t i = 0; i < frecuenciasMaximos.size(); i++){
+        frecuenciasMaximos[i]=valores[0][valores[1][(int)i]];
+    }
+    //Crear el string
+    auto parsedString =vectorToString(frecuenciasMaximos);
+    //Mandar al ARDUINO
+    sendToArduino(parsedString, serial_port);
+    cout<<parsedString<<endl;
+    return {valores[1],frecuenciasMaximos};
 }
 /*
 int main(){
