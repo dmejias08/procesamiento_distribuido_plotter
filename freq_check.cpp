@@ -62,7 +62,6 @@ int main(int argc, char** argv) {
             return -1;
         }
 
-        printf("Estoy en master, este es mi size %d\n", size);
         string text((istreambuf_iterator<char>(input_file)), istreambuf_iterator<char>());
         int text_length = text.length();
         printf("Text size %d\n", text_length);
@@ -75,7 +74,6 @@ int main(int argc, char** argv) {
             int fraction_length = fraction_size + (i == size - 1 ? extra_characters : 0);
             string text_fraction = text.substr(start, fraction_length);
 
-            printf("fraction_length desde master %d\n", fraction_length);
             MPI_Send(&fraction_length, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
             MPI_Send(text_fraction.c_str(), fraction_length, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
@@ -84,7 +82,7 @@ int main(int argc, char** argv) {
         int fraction_length;
         // Receive fraction size from root process
         MPI_Recv(&fraction_length, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        printf("fraction_length desde nodo %d: %d\n", rank, fraction_length);
+        printf("Fraccion de texto recibido desde nodo %d: %d\n", rank, fraction_length);
 
         // Dynamically allocate memory for text_fraction
         char* text_fraction_buffer = new char[fraction_length + 1]; // +1 for null terminator
@@ -96,7 +94,6 @@ int main(int argc, char** argv) {
         delete[] text_fraction_buffer; // Deallocate buffer
 
         // Count letter frequency in the text fraction
-        printf("chars to count\n");
         map<char, int> local_frequency = count_letter_frequency(text_fraction);
 
         // Send local frequency data to the root node after encryption
@@ -110,7 +107,7 @@ int main(int argc, char** argv) {
 
     // Root node gathers frequency data from all nodes
     if (rank == 0) {
-       printf("Hola desde master estoy recibiendo los datos\n");
+       printf("Master recibiendo datos...\n");
         // Root node gathers frequency data from all nodes
         vector<int> global_frequency_data(256, 0); // Initialize vector to hold global frequency data
         for (int i = 1; i < size; i++) {
