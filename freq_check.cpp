@@ -122,17 +122,24 @@ int main(int argc, char** argv) {
                 global_frequency_data[j] += received_frequency_data[j];
             }
         }
-        vector<int> result = vector<int>();
+        vector<int> node_result = vector<int>();
         
         // Print the global frequency of each letter, treating uppercase and lowercase as equal
         for (char c = 'a'; c <= 'z'; ++c) {
             cout << "'" << c << "': " << global_frequency_data[c] + global_frequency_data[toupper(c)] << endl;
         
-            result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
+            node_result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
         }
+        
         int serial_port=-1;
         
-	    Plot(result, &serial_port);
+        vector<vector<float>> data_to_plot_result;
+        data_to_plot_result = Plot(node_result, &serial_port);
+        vector<float> char_index = data_to_plot_result[0];
+        vector<float> char_frecuency_index = data_to_plot_result[1];
+        for (int i = 0; i < char_index.size(); i++){
+            cout << "'" << char(char_index[i] + 'a') << "': " << char_frecuency_index[i]<< endl;
+        }
     }
     
 
