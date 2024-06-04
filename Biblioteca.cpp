@@ -43,7 +43,7 @@ vector<vector<float>> getMax(vector<int> histograma){
     for (size_t i = 0; i < 4; i++)
     {
         maxvalue=nextMaxValue;
-        nextMaxValue=0
+        nextMaxValue=0;
         for (size_t i = 0; i < normalizado.size(); i++){
             
 
@@ -138,8 +138,7 @@ int sendToArduino(std::string message) {
         std::cerr << "Error Reading to serial port: " << strerror(errno) << std::endl;
     } else {
         std::cout << "readed: " << recieved.data() << std::endl;
-    }
-    
+    }    
 
     return 0;
 }
@@ -148,7 +147,7 @@ void closePort(){
 }
 
 
-vector<vector<float>> Plot(vector<int> in){
+void Plot(vector<int> in){
 //obtener lista de posicion de maximos y la frecuencia normalizada
 //Valores[0] =>  histograma normalizado
 //Valores[1] =>  lista de posiciones
@@ -161,8 +160,9 @@ for (size_t i = 0; i < frecuenciasMaximos.size(); i++){
 //Crear el string
 auto parsedString =vectorToString(frecuenciasMaximos);
 //Mandar al ARDUINO
-sendToArduino(parsedString);//No tengo el arduino correcto
-return {valores[1],frecuenciasMaximos};
+sendToArduino(parsedString);
+cout<<parsedString<<endl;
+//return {valores[1],frecuenciasMaximos};
 }
 /*
 int main(){

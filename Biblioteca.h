@@ -21,6 +21,6 @@ int sendToArduino(std::string message);
 
 void closePort();
 
-vector<vector<float>> Plot(vector<int> in);
+void Plot(vector<int> in);
 
 #endif
