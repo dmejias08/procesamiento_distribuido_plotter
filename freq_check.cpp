@@ -4,7 +4,6 @@
 #include <map>
 #include <mpi.h>
 #include "biblioteca.h"
-
 using namespace std;
 
 char remove_accent(char c) {
@@ -131,7 +130,7 @@ int main(int argc, char** argv) {
             printf("valor %d: %d\n", j, result[j]);        
         }
 
-        /* auto valores=getMax(result);
+        auto valores=getMax(result);
         //Obtener los 5 a plotear
         vector<float> frecuenciasMaximos=vector<float>(5);
         for (size_t i = 0; i < frecuenciasMaximos.size(); i++){
@@ -140,9 +139,10 @@ int main(int argc, char** argv) {
         //Crear el string
         auto parsedString =vectorToString(frecuenciasMaximos);
         //Mandar al ARDUINO
-        sendToArduino(parsedString); */
+        printf("Llegue hasta aqui \n");
+        sendToArduino(parsedString);
 
-        Plot(result);
+       // Plot(result);
     }
 
     MPI_Finalize();

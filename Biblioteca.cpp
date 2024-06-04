@@ -161,8 +161,8 @@ auto parsedString =vectorToString(frecuenciasMaximos);
 sendToArduino(parsedString);//No tengo el arduino correcto
 return {valores[1],frecuenciasMaximos};
 }
-
-int ejemplo(){
+/*
+int main(){
 //Setear valores
 vector<int> lista=vector<int>(7);
 lista[0]=0;
@@ -188,4 +188,4 @@ auto parsedString =vectorToString(frecuenciasMaximos);
 //Mandar al ARDUINO
 sendToArduino(parsedString);//No tengo el arduino correcto
 cout<<parsedString<<endl;
-}
+}*/
