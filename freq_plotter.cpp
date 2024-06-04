@@ -81,7 +81,7 @@ int sendToArduino(std::string message) {
     vector<char> recieved(255);
     std::string message_1;
 
-    std::cout << "Enter a character to send to the Arduino: ";
+    std::cout << "Press any key to continue ";
     std::cin >> message_1;
 
     // Write the message to the serial port
@@ -113,11 +113,7 @@ int main(int argc, char** argv) {
     while (getline(ss, token, ',')) {
         result_freq.push_back(std::stoi(token));
     }
-
-    for (int j = 0; j < result_freq.size(); ++j) {
-            printf("valor %d: %d\n", j, result_freq[j]);        
-    }
-
+    
     auto valores = getMax(result_freq);
     vector<float> frecuenciasMaximos = vector<float>(5);
     
@@ -128,5 +124,11 @@ int main(int argc, char** argv) {
     auto parsedString = vectorToString(frecuenciasMaximos);
     sendToArduino(parsedString);
     cout<<parsedString<<endl;
+
+    vector<float> char_index = valores[1];
+    for (int i = 0; i < char_index.size(); i++){
+        cout << "'" << char(char_index[i] + 'a') << "': " << frecuenciasMaximos[i]<< endl;
+    }
+    
     return 0;
 }
