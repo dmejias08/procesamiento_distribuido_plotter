@@ -4,7 +4,7 @@ build:
 	g++ -c Biblioteca.cpp
 	ar rvs Biblioteca.a Biblioteca.o
 	mpic++ freq_check.cpp -o /home/nodo/operativos/freq_check
-	g++ freq_plotter.cpp Biblioteca.a -o /home/nodo/operativos/plotter
+	g++ freq_plotter.cpp -o plotter
 run:
 	mpirun  --host localhost:1,geo:1,abner:1 -np 3 /home/nodo/operativos/freq_check EncryptedData.txt
 conn:
