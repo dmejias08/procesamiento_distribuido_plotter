@@ -4,7 +4,7 @@
 #include <map>
 #include <mpi.h>
 #include <string.h>
-#include "biblioteca.h"
+
 using namespace std;
 
 char remove_accent(char c) {
