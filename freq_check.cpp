@@ -130,11 +130,11 @@ int main(int argc, char** argv) {
             result.append(",");
             //result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
         }
+	string command = "/home/nodo/operativos/plotter " + result;
+    	cout<<command<<endl;
+    	system(command.c_str());
     }
 
     MPI_Finalize();
-    string command = "./plotter " + result;
-    cout<<command<<endl;
-    system(command.c_str());
     return 0;
 }
