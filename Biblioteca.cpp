@@ -61,7 +61,7 @@ vector<vector<float>> getMax(vector<int> histograma){
 }
 
 
-int serial_port=-1;
+static int serial_port=-1;
 
 
 int drawManual() {
