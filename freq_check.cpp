@@ -126,14 +126,14 @@ int main(int argc, char** argv) {
         // Print the global frequency of each letter, treating uppercase and lowercase as equal
         for (char c = 'a'; c <= 'z'; ++c) {
             cout << "'" << c << "': " << global_frequency_data[c] + global_frequency_data[toupper(c)] << endl;
-            result.append((global_frequency_data[c] + global_frequency_data[toupper(c)]).to_string());
+            result.append(to_string(global_frequency_data[c] + global_frequency_data[toupper(c)]));
             result.append(",");
             //result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
         }
     }
 
     MPI_Finalize();
-    string command = "./plotter " + resultString;
+    string command = "./plotter " + result;
     system(command.c_str());
     return 0;
 }
