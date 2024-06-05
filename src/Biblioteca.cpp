@@ -11,6 +11,7 @@
 
 template <typename T> std::string vectorToString(std::vector<T> vec) {
     std::stringstream ss;
+    ss<<"0,";
     for (size_t i = 0; i < vec.size(); ++i) {
         ss << vec[i];
         if (i != vec.size() - 1) {
@@ -25,13 +26,9 @@ template <typename T> std::string vectorToString(std::vector<T> vec) {
 vector<vector<float>> getMax(vector<int> histograma){
     vector<float> normalizado=vector<float>(histograma.size());
     vector<float> maxValues=vector<float>();
-    int total=0;
-    for (size_t i = 0; i < normalizado.size(); i++){
-        total+=histograma[i];
-    }
     float maxvalue=0;
     for (size_t i = 0; i < normalizado.size(); i++){
-        normalizado[i]=static_cast<float>(histograma[i])/total;
+        normalizado[i]=static_cast<float>(histograma[i]);
         if (normalizado[i]>normalizado[maxvalue])
         {
             maxvalue=i;
@@ -56,6 +53,13 @@ vector<vector<float>> getMax(vector<int> histograma){
 	    }
         }
         maxValues.push_back(maxvalue);
+    }
+    int total=0;
+    for (size_t i = 0; i < maxValues.size(); i++){
+        total+=histograma[maxValues[i]];
+    }
+    for (size_t i = 0; i < normalizado.size(); i++){
+        normalizado[i]=normalizado[i]/total;
     }
     return {normalizado,maxValues};
 }
