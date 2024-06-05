@@ -15,12 +15,12 @@ template <typename T> std::string vectorToString(std::vector<T> vec);
 
 vector<vector<float>> getMax(vector<int> histograma);
 
-int drawManual();
+int drawManual(int *serial_port);
 
-int sendToArduino(std::string message);
+int sendToArduino(std::string message, int *serial_port);
 
-void closePort();
+void closePort(int *serial_port);
 
-void Plot(vector<int> in);
+vector<vector<float>> Plot(vector<int> in, int *serial_port);
 
 #endif

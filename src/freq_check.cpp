@@ -4,6 +4,7 @@
 #include <map>
 #include <mpi.h>
 #include <string.h>
+#include "Biblioteca.h"
 
 using namespace std;
 
@@ -35,12 +36,12 @@ map<char, int> count_letter_frequency(const string& text_fraction) {
 }
 
 int main(int argc, char** argv) {
-    string result;
+    
     MPI_Init(&argc, &argv);
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
-
+    vector<int> node_result = vector<int>();
     if (argc != 2) {
         if (rank == 0) {
             cerr << "Usage: " << argv[0] << " <input_text_file>" << endl;
@@ -118,20 +119,30 @@ int main(int argc, char** argv) {
                 global_frequency_data[j] += received_frequency_data[j];
             }
         }
-
+        
         
         // Print the global frequency of each letter, treating uppercase and lowercase as equal
         for (char c = 'a'; c <= 'z'; ++c) {
             cout << "'" << c << "': " << global_frequency_data[c] + global_frequency_data[toupper(c)] << endl;
-            result.append(to_string(global_frequency_data[c] + global_frequency_data[toupper(c)]));
-            result.append(",");
-            //result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
+        
+            node_result.push_back(global_frequency_data[c] + global_frequency_data[toupper(c)]);
         }
-	string command = "/home/nodo/operativos/plotter " + result;
-    	cout<<command<<endl;
-    	system(command.c_str());
+	 int serial_port=-1;
+        
+    	vector<vector<float>> data_to_plot_result;
+    	data_to_plot_result = Plot(node_result, &serial_port);
+    	vector<float> char_index = data_to_plot_result[0];
+    	vector<float> char_frecuency_index = data_to_plot_result[1];
+    	for (int i = 0; i < char_index.size(); i++){
+        	cout << "'" << char(char_index[i] + 'a') << "': " << char_frecuency_index[i]<< endl;
+    	}
+    
     }
+    
 
     MPI_Finalize();
+
+   
+
     return 0;
 }
