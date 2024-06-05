@@ -5,7 +5,7 @@
 #include <ctype.h>
 using namespace std;
 
-string encrypted_file_path ="EncryptedData.txt";
+string encrypted_file_path ="../output/EncryptedData.txt";
 
 int main(void)
 {
