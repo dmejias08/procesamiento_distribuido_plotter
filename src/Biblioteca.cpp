@@ -137,13 +137,7 @@ int sendToArduino(std::string message, int *serial_port) {
     } else {
         std::cout << "Sent: " << message << std::endl;
     }
-    
-    int read_result = read(*serial_port,recieved.data(),255);
-    if (read_result < 0) {
-        std::cerr << "Error Reading to serial port: " << strerror(errno) << std::endl;
-    } else {
-        std::cout << "readed: " << recieved.data() << std::endl;
-    }    
+        
 
     return 0;
 }
